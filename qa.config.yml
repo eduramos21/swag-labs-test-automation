@@ -1,0 +1,36 @@
+# qa.config.yml for swag-labs-test-automation
+
+project:
+  name: swag-labs-test-automation
+
+stacks:
+  web:
+    profile: ts-playwright
+    root: e2e/
+    base_url_env: BASE_URL
+
+ci:
+  provider: github-actions
+  path: .github/workflows/e2e.yml
+
+tracker:
+  provider: github-issues
+
+requirements:
+  source: markdown
+  path: docs/requirements/
+
+reporting:
+  artifacts: test-results/
+
+policies:
+  # saucedemo.com uses data-test. Set testIdAttribute: "data-test" in playwright.config.ts.
+  test_id_attribute: data-test
+  max_test_runtime_s: 60
+  forbid:
+    - hard_sleeps
+    - absolute_xpath
+    - conditional_assertions
+    - shared_mutable_state
+    - no_assertion
+  require_test_data_cleanup: true

@@ -1,5 +1,3 @@
-# Copied into a project by /qa:init when ci.provider is github-actions.
-# Adjust the working-directory to match stacks.web.root in qa.config.yml.
 name: e2e
 
 on:
@@ -12,6 +10,12 @@ jobs:
   playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      BASE_URL: ${{ secrets.BASE_URL }}
+      STANDARD_USER: ${{ secrets.STANDARD_USER }}
+      PROBLEM_USER: ${{ secrets.PROBLEM_USER }}
+      LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+      PASSWORD: ${{ secrets.PASSWORD }}
     defaults:
       run:
         working-directory: e2e
@@ -29,19 +33,26 @@ jobs:
       - name: install browsers
         run: npx playwright install --with-deps chromium
 
-      - name: run suite
-        run: npx playwright test --forbid-only
-        env:
-          BASE_URL: ${{ secrets.BASE_URL || vars.BASE_URL }}
+      # Both suites always run; the job goes red at the end if either failed.
+      - name: smoke
+        id: smoke
+        continue-on-error: true
+        run: npm run smoke -- --forbid-only
 
-      # Needs allure-playwright and allure in devDependencies (/qa:report).
-      - name: build allure report
-        if: ${{ !cancelled() }}
-        run: npx allure generate allure-results -o allure-report --clean
+      - name: regression
+        id: regression
+        continue-on-error: true
+        run: npm run regression -- --forbid-only
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: allure-report
-          path: e2e/allure-report/
+          name: playwright-report
+          path: |
+            e2e/playwright-report/
+            e2e/test-results/
           retention-days: 14
+
+      - name: fail if smoke or regression failed
+        if: ${{ steps.smoke.outcome == 'failure' || steps.regression.outcome == 'failure' }}
+        run: exit 1

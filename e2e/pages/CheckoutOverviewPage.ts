@@ -1,12 +1,12 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from "@playwright/test";
 
 export class CheckoutOverviewPage {
   readonly items: Locator;
   readonly finish: Locator;
 
   constructor(page: Page) {
-    this.items = page.getByTestId('inventory-item');
-    this.finish = page.getByRole('button', { name: 'Finish' });
+    this.items = page.getByTestId("inventory-item");
+    this.finish = page.getByRole("button", { name: "Finish" });
   }
 
   item(name: string): Locator {
@@ -14,10 +14,10 @@ export class CheckoutOverviewPage {
   }
 
   quantity(name: string): Locator {
-    return this.item(name).getByTestId('item-quantity');
+    return this.item(name).getByTestId("item-quantity");
   }
 
   description(name: string): Locator {
-    return this.item(name).getByTestId('inventory-item-desc');
+    return this.item(name).getByTestId("inventory-item-desc");
   }
 }

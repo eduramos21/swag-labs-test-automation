@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from "@playwright/test";
 
 export class InventoryPage {
   readonly title: Locator;
@@ -8,15 +8,15 @@ export class InventoryPage {
   readonly sort: Locator;
 
   constructor(private readonly page: Page) {
-    this.title = page.getByTestId('title');
-    this.items = page.getByTestId('inventory-item');
-    this.itemNames = page.getByTestId('inventory-item-name');
-    this.itemPrices = page.getByTestId('inventory-item-price');
-    this.sort = page.getByTestId('product-sort-container');
+    this.title = page.getByTestId("title");
+    this.items = page.getByTestId("inventory-item");
+    this.itemNames = page.getByTestId("inventory-item-name");
+    this.itemPrices = page.getByTestId("inventory-item-price");
+    this.sort = page.getByTestId("product-sort-container");
   }
 
   async goto() {
-    await this.page.goto('/inventory.html');
+    await this.page.goto("/inventory.html");
   }
 
   item(name: string): Locator {
@@ -24,11 +24,11 @@ export class InventoryPage {
   }
 
   addButton(name: string): Locator {
-    return this.item(name).getByRole('button', { name: 'Add to cart' });
+    return this.item(name).getByRole("button", { name: "Add to cart" });
   }
 
   removeButton(name: string): Locator {
-    return this.item(name).getByRole('button', { name: 'Remove' });
+    return this.item(name).getByRole("button", { name: "Remove" });
   }
 
   async sortBy(label: string) {
@@ -36,6 +36,6 @@ export class InventoryPage {
   }
 
   async openDetails(name: string) {
-    await this.item(name).getByTestId('inventory-item-name').click();
+    await this.item(name).getByTestId("inventory-item-name").click();
   }
 }

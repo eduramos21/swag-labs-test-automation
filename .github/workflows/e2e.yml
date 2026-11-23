@@ -8,8 +8,19 @@ on:
 
 jobs:
   playwright:
+    name: ${{ matrix.suite }} ${{ matrix.user }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # One build per suite and user. problem_user jobs stay red on purpose (seeded app bugs).
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { suite: smoke, user: standard_user }
+          - { suite: smoke, user: problem_user }
+          - { suite: smoke, user: locked_out_user }
+          - { suite: regression, user: standard_user }
+          - { suite: regression, user: problem_user }
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
       STANDARD_USER: ${{ secrets.STANDARD_USER }}
@@ -33,16 +44,11 @@ jobs:
       - name: install browsers
         run: npx playwright install --with-deps chromium
 
-      # Both suites always run; the job goes red at the end if either failed.
-      - name: smoke
-        id: smoke
-        continue-on-error: true
-        run: npm run smoke -- --forbid-only
+      - name: every test has one user tag
+        run: npm run check:tags
 
-      - name: regression
-        id: regression
-        continue-on-error: true
-        run: npm run regression -- --forbid-only
+      - name: ${{ matrix.suite }} ${{ matrix.user }}
+        run: npm run ${{ matrix.suite }} ${{ matrix.user }} -- --forbid-only
 
       - name: build allure report
         if: ${{ !cancelled() }}
@@ -51,13 +57,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: allure-report
+          name: allure-${{ matrix.suite }}-${{ matrix.user }}
           path: |
             e2e/test-results/
             e2e/allure-report/
             e2e/allure-results/
           retention-days: 14
-
-      - name: fail if smoke or regression failed
-        if: ${{ steps.smoke.outcome == 'failure' || steps.regression.outcome == 'failure' }}
-        run: exit 1

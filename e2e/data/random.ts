@@ -1,4 +1,4 @@
-import { products, type Product } from './products';
+import { products, type Product } from "./products";
 
 export interface Rng {
   seed: number;

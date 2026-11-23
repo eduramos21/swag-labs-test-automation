@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
-    "smoke": "playwright test --grep @smoke",
-    "regression": "cross-env SEED=9 playwright test --grep @regression",
+    "test": "node scripts/run.js all",
+    "smoke": "node scripts/run.js smoke",
+    "regression": "node scripts/run.js regression",
+    "check:tags": "node scripts/check-tags.js",
     "report": "allure generate allure-results -o allure-report --clean && allure open allure-report"
   },
   "keywords": [],

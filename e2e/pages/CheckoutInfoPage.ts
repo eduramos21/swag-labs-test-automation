@@ -1,4 +1,4 @@
-import { type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from "@playwright/test";
 
 export class CheckoutInfoPage {
   readonly firstName: Locator;
@@ -8,11 +8,11 @@ export class CheckoutInfoPage {
   readonly error: Locator;
 
   constructor(page: Page) {
-    this.firstName = page.getByPlaceholder('First Name');
-    this.lastName = page.getByPlaceholder('Last Name');
-    this.postalCode = page.getByPlaceholder('Zip/Postal Code');
-    this.continueButton = page.getByRole('button', { name: 'Continue' });
-    this.error = page.getByTestId('error');
+    this.firstName = page.getByPlaceholder("First Name");
+    this.lastName = page.getByPlaceholder("Last Name");
+    this.postalCode = page.getByPlaceholder("Zip/Postal Code");
+    this.continueButton = page.getByRole("button", { name: "Continue" });
+    this.error = page.getByTestId("error");
   }
 
   async fill(first: string, last: string, postal: string) {

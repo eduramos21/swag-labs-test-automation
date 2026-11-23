@@ -10,7 +10,7 @@ Playwright (TypeScript) end-to-end tests for [Swag Labs](https://www.saucedemo.c
 4. `npx playwright install chromium`
 5. `cp .env.example .env` (Windows: `copy .env.example .env`)
 6. Run one of: `npm run smoke`, `npm run regression`, `npm test` (everything).
-7. Open the report: `npm run report`
+7. Open the Allure report: `npm run report`
 
 ## Red on purpose
 

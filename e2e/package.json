@@ -7,8 +7,7 @@
     "test": "playwright test",
     "smoke": "playwright test --grep @smoke",
     "regression": "cross-env SEED=9 playwright test --grep @regression",
-    "report": "playwright show-report",
-    "report:allure": "allure generate allure-results -o allure-report --clean && allure open allure-report"
+    "report": "allure generate allure-results -o allure-report --clean && allure open allure-report"
   },
   "keywords": [],
   "author": "",

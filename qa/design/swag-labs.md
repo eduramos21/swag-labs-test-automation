@@ -89,7 +89,7 @@ Root `README.md`, written for a reviewer with nothing installed. Steps in order,
 4. `npx playwright install chromium`
 5. `cp .env.example .env` (Windows: `copy .env.example .env`)
 6. Run: `npm run smoke`, `npm run regression`, or `npm test`.
-7. Open the report: `npm run report`.
+7. Open the Allure report: `npm run report`.
 
 Also in the README: what is red on purpose and why, how to replay a run with `SEED=<n>`, the folder layout, and how CI gets the same vars from GitHub secrets.
 

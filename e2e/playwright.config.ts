@@ -8,7 +8,7 @@ export default defineConfig({
   testDir: './tests',
   timeout: 60_000,
   forbidOnly: !!process.env.CI,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never' }], ['allure-playwright', { resultsDir: 'allure-results' }]],
   use: {
     baseURL: requireEnv('BASE_URL'),
     testIdAttribute: 'data-test',

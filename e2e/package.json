@@ -7,7 +7,8 @@
     "test": "playwright test",
     "smoke": "playwright test --grep @smoke",
     "regression": "cross-env SEED=9 playwright test --grep @regression",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "report:allure": "allure generate allure-results -o allure-report --clean && allure open allure-report"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,8 @@
   "devDependencies": {
     "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.6",
+    "allure": "^3.33.0",
+    "allure-playwright": "^3.15.0",
     "cross-env": "^10.1.0",
     "dotenv": "^18.0.10",
     "typescript": "^7.0.2"

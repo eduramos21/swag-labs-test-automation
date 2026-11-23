@@ -21,6 +21,7 @@ requirements:
   path: docs/requirements/
 
 reporting:
+  allure: true
   artifacts: test-results/
 
 policies:

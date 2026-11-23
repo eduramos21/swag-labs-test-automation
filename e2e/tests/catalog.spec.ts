@@ -15,19 +15,19 @@ test.describe("product catalog: display, details and sorting", () => {
           );
           for (const { name } of products) {
             const item = inventory.item(name);
-            expect
+            await expect
               .soft(item.getByRole("img", { name }), `${name} image`)
               .toBeVisible();
-            expect
+            await expect
               .soft(item.getByTestId("inventory-item-price"), `${name} price`)
               .toHaveText(/^\$\d+\.\d{2}$/);
-            expect
+            await expect
               .soft(
                 item.getByTestId("inventory-item-desc"),
                 `${name} description`,
               )
               .not.toBeEmpty();
-            expect
+            await expect
               .soft(inventory.addButton(name), `${name} add to cart button`)
               .toBeVisible();
           }

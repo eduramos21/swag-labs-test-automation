@@ -68,6 +68,7 @@ Smoke is always red through T10. Regression uses a fixed seed that includes BUG-
 - Credentials are secrets. They come from env vars `BASE_URL`, `STANDARD_USER`, `PROBLEM_USER`, `LOCKED_OUT_USER` and `PASSWORD`, read from a gitignored `e2e/.env`. CI reads them from GitHub secrets. A fixture fails fast with a clear error naming the missing var. Products live in `e2e/data/products.ts`.
 - Reviewer setup: a committed `e2e/.env.example` holds the five names with the demo values the login page publishes. The reviewer runs `cp .env.example .env` and nothing else to configure.
 - Cart state is browser local storage, isolated per Playwright context. `require_test_data_cleanup` is met by a fixture teardown that resets app state through the menu, on the cart and checkout tests.
+- Login: `auth.setup.ts` logs in once per user and saves the session cookie to gitignored `e2e/.auth/`. `loginAs` loads it, so only T1 to T4 use the login form. Each test gets its own context, so cart state stays isolated.
 - Given steps that need products in the cart seed local storage directly instead of clicking through the catalog. Otherwise a catalog bug breaks setup and the failure points at the wrong step.
 - Random picks come from a seeded helper reading `SEED`. Regression sets a fixed seed whose picks include BUG-03 products (Bolt T-Shirt, Fleece Jacket, Red T-Shirt) and BUG-04 products (Backpack, Bike Light, Onesie).
 - No row depends on another, so tests run in parallel.

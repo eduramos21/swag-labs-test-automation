@@ -1,6 +1,7 @@
 import { test as base, expect } from '@playwright/test';
 import { createRng, type Rng } from '../data/random';
-import { password, usernameOf, type Role } from '../data/users';
+import { readFileSync } from 'node:fs';
+import { authFile, type Role } from '../data/users';
 import { CartPage } from '../pages/CartPage';
 import { CheckoutCompletePage } from '../pages/CheckoutCompletePage';
 import { CheckoutInfoPage } from '../pages/CheckoutInfoPage';
@@ -34,10 +35,12 @@ export const test = base.extend<Fixtures>({
   checkoutComplete: async ({ page }, use) => use(new CheckoutCompletePage(page)),
   header: async ({ page }, use) => use(new Header(page)),
 
-  loginAs: async ({ login, inventory }, use) => {
+  // Reuses the session saved by auth.setup.ts: the app keeps its session in one cookie.
+  loginAs: async ({ page, inventory }, use) => {
     await use(async (role) => {
-      await login.goto();
-      await login.signIn(usernameOf(role), password());
+      const { cookies } = JSON.parse(readFileSync(authFile(role), 'utf8'));
+      await page.context().addCookies(cookies);
+      await inventory.goto();
       await expect(inventory.title, `${role} reaches the products page`).toHaveText('Products');
     });
   },

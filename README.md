@@ -30,6 +30,10 @@ Two `standard_user` tests are red too: a username with surrounding spaces (BUG-1
 
 Cart and checkout tests pick products at random. The seed is attached to each test in the report. `npm run regression` uses a fixed seed (`SEED=9`) whose picks include BUG-03 and BUG-04 products. To replay a run: `SEED=<n> npx playwright test` (Windows PowerShell: `$env:SEED=<n>; npx playwright test`).
 
+## Login reuse
+
+`tests/auth.setup.ts` logs in `standard_user` and `problem_user` once per run and saves each session to `e2e/.auth/`. Every other test loads that session instead of using the login form. Only `login.spec.ts` uses the real form. Nothing to set up: the setup runs by itself before the tests.
+
 ## Layout
 
 ```
@@ -37,6 +41,7 @@ e2e/
   tests/      specs by area: login, catalog, cart, checkout
   pages/      one page object per screen, exposed as fixtures
   fixtures/   test.extend: page objects, loginAs, seedCart, rng
+  .auth/      sessions saved by tests/auth.setup.ts (gitignored, created on each run)
   data/       products, sort options, users, env, seeded random
   .env.example  names and public demo values of the five variables
 ```

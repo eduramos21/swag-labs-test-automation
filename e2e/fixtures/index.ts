@@ -23,6 +23,7 @@ interface Fixtures {
   loginAs: (role: Role) => Promise<void>;
   seedCart: (productIds: number[]) => Promise<void>;
   rng: Rng;
+  highlight: void;
 }
 
 export const test = base.extend<Fixtures>({
@@ -67,6 +68,28 @@ export const test = base.extend<Fixtures>({
       await header.resetAppState();
     }
   },
+
+  // HIGHLIGHT=1 (set by run.js on headed runs) outlines each element the test clicks, types in or selects.
+  highlight: [
+    async ({ context }, use) => {
+      if (process.env.HIGHLIGHT) {
+        await context.addInitScript(() => {
+          const flash = (e: Event) => {
+            const el = e.target;
+            if (!(el instanceof HTMLElement)) return;
+            const old = el.style.cssText;
+            el.style.outline = "3px solid #ff2d95";
+            el.style.outlineOffset = "2px";
+            setTimeout(() => (el.style.cssText = old), 600);
+          };
+          for (const t of ["mousedown", "focusin", "change"])
+            addEventListener(t, flash, true);
+        });
+      }
+      await use();
+    },
+    { auto: true },
+  ],
 
   rng: async ({}, use, testInfo) => {
     const seed = Number(

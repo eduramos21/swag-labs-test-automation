@@ -5,7 +5,7 @@ test.describe("login: valid, locked out and invalid credentials", () => {
   for (const user of sessionRoles) {
     test(
       `a valid user logs in [${user}]`,
-      { tag: ["@smoke", `@${user}`] },
+      { tag: ["@smoke", "@regression", `@${user}`] },
       async ({ login, inventory }) => {
         await test.step(`Given ${user} is on the login page`, () =>
           login.goto());

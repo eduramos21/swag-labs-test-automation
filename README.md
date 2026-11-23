@@ -61,7 +61,18 @@ Every test runs for every user (see "Tags" below). The two exceptions, the usern
 
 ## Random products and SEED
 
-Cart and checkout tests pick products at random. The seed is attached to each test in the report. `npm test`, `npm run smoke` and `npm run regression` use a fixed seed (`SEED=9`) whose picks include BUG-03 and BUG-04 products. To replay a run: `SEED=<n> npx playwright test` (Windows PowerShell: `$env:SEED=<n>; npx playwright test`).
+Cart, checkout and detail page tests pick products at random. The seed decides the picks: the same seed gives the same products every run, so results compare between runs and a failure reproduces. The seed is attached to each test in the Allure report.
+
+`npm test`, `npm run smoke` and `npm run regression` default to `SEED=9`. With that seed the `problem_user` tests that hit BUG-03 and BUG-04 products fail on every run, in the same places. That is deterministic, not flaky (same failures on repeated runs of `regression problem_user`).
+
+| Command                                                          | Picks                                          |
+| ---------------------------------------------------------------- | ---------------------------------------------- |
+| `npm run regression`                                             | SEED 9, same products every run                |
+| `SEED=42 npm run regression`                                     | another fixed seed                             |
+| `SEED=off npm run regression`                                    | no seed, new random products every run         |
+| Windows PowerShell: `$env:SEED="off"; npm run regression`        | same as above                                  |
+
+With `SEED=off`, `problem_user` tests for BUG-03 and BUG-04 fail only when the random picks include an affected product. A failing random run prints its seed in the report, replay it with `SEED=<n>`. Plain `npx playwright test` (without the runner) has no default seed and picks random products.
 
 ## Login reuse
 

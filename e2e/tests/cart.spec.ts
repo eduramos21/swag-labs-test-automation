@@ -3,16 +3,16 @@ import { sessionRoles as users } from "../data/users";
 
 test.describe("cart: adding and removing products", () => {
   const addPlaces = [
-    { place: "catalog", tag: "@smoke" },
-    { place: "detail page", tag: "@regression" },
+    { place: "catalog", tags: ["@smoke", "@regression"] },
+    { place: "detail page", tags: ["@regression"] },
   ] as const;
 
   for (const user of users) {
-    for (const { place, tag } of addPlaces) {
+    for (const { place, tags } of addPlaces) {
       test(
         `keep shopping and add more products to the cart [${user}, ${place}]`,
         {
-          tag: [tag, `@${user}`, "@BUG-03", "@BUG-05", "@BUG-07", "@BUG-08"],
+          tag: [...tags, `@${user}`, "@BUG-03", "@BUG-05", "@BUG-07", "@BUG-08"],
         },
         async ({
           rng,
@@ -62,19 +62,19 @@ test.describe("cart: adding and removing products", () => {
   }
 
   const removePlaces = [
-    { user: "standard_user", place: "cart page", tag: "@smoke" },
-    { user: "problem_user", place: "cart page", tag: "@smoke" },
-    { user: "standard_user", place: "catalog", tag: "@regression" },
-    { user: "standard_user", place: "detail page", tag: "@regression" },
-    { user: "problem_user", place: "catalog", tag: "@regression" },
-    { user: "problem_user", place: "detail page", tag: "@regression" },
+    { user: "standard_user", place: "cart page", tags: ["@smoke", "@regression"] },
+    { user: "problem_user", place: "cart page", tags: ["@smoke", "@regression"] },
+    { user: "standard_user", place: "catalog", tags: ["@regression"] },
+    { user: "standard_user", place: "detail page", tags: ["@regression"] },
+    { user: "problem_user", place: "catalog", tags: ["@regression"] },
+    { user: "problem_user", place: "detail page", tags: ["@regression"] },
   ] as const;
 
-  for (const { user, place, tag } of removePlaces) {
+  for (const { user, place, tags } of removePlaces) {
     test(
       `remove products from the cart [${user}, ${place}]`,
       {
-        tag: [tag, `@${user}`, "@BUG-04", "@BUG-06"],
+        tag: [...tags, `@${user}`, "@BUG-04", "@BUG-06"],
       },
       async ({
         rng,

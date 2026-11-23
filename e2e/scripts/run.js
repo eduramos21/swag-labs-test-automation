@@ -24,9 +24,12 @@ const grep = lookaheads.length
   : [];
 
 rmSync("allure-results", { recursive: true, force: true });
+// SEED=9 by default. SEED=<n> picks another; SEED=off lets every run pick random products.
+const env = { SEED: "9", ...process.env, RUN_SUITE: suite, RUN_USER: user };
+if (env.SEED === "off") delete env.SEED;
 const result = spawnSync("npx", ["playwright", "test", ...grep, ...rest], {
   stdio: "inherit",
   shell: process.platform === "win32",
-  env: { SEED: "9", ...process.env, RUN_SUITE: suite, RUN_USER: user },
+  env,
 });
 process.exit(result.status ?? 1);

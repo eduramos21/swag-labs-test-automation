@@ -1,7 +1,6 @@
 import { products, type Product } from "./products";
 
 export interface Rng {
-  seed: number;
   pick(count: number): Product[];
 }
 
@@ -18,7 +17,6 @@ function mulberry32(seed: number): () => number {
 
 export function createRng(seed: number): Rng {
   return {
-    seed,
     // Every call replays the sequence, so pick(2) is the first two of pick(3).
     pick(count) {
       const next = mulberry32(seed);

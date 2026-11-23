@@ -5,14 +5,10 @@ export class CartPage {
   readonly continueShopping: Locator;
   readonly checkout: Locator;
 
-  constructor(private readonly page: Page) {
+  constructor(page: Page) {
     this.items = page.getByTestId("inventory-item");
     this.continueShopping = page.getByTestId("continue-shopping");
     this.checkout = page.getByTestId("checkout");
-  }
-
-  async goto() {
-    await this.page.goto("/cart.html");
   }
 
   item(name: string): Locator {

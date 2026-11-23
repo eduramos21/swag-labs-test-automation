@@ -3,7 +3,8 @@
 const { spawnSync } = require("node:child_process");
 const { rmSync } = require("node:fs");
 
-const [suite, user = "all_users", ...rest] = process.argv.slice(2);
+const [suite, ...rest] = process.argv.slice(2);
+const user = rest[0] && !rest[0].startsWith("-") ? rest.shift() : "all_users";
 const suites = ["smoke", "regression", "all"];
 const users = [
   "standard_user",
@@ -26,14 +27,21 @@ if (
 const lookaheads = [];
 if (suite !== "all") lookaheads.push(`@${suite}`);
 if (user !== "all_users") lookaheads.push(`@${user}`);
-const grep = lookaheads.length
-  ? ["--grep", lookaheads.map((t) => `(?=.*${t}\\b)`).join("")]
-  : [];
+const patterns = lookaheads.map((t) => `(?=.*${t}\\b)`);
+// -g/--grep "title" joins the suite and user filters (AND); Playwright would otherwise ignore it.
+const gi = rest.findIndex((a) => a === "-g" || a === "--grep");
+if (gi >= 0) patterns.push(`(?=.*${rest.splice(gi, 2)[1]})`);
+const grep = patterns.length ? ["--grep", patterns.join("")] : [];
 
 rmSync("allure-results", { recursive: true, force: true });
 // SEED=9 by default. SEED=<n> picks another; SEED=off lets every run pick random products.
 const env = { SEED: "9", ...process.env, RUN_SUITE: suite, RUN_USER: user };
 if (env.SEED === "off") delete env.SEED;
+// Headed runs are for watching: slow them down and outline interactions. Set SLOWMO=0 / HIGHLIGHT= to opt out.
+if (rest.includes("--headed")) {
+  env.SLOWMO ??= "500";
+  env.HIGHLIGHT ??= "1";
+}
 const result = spawnSync("npx", ["playwright", "test", ...grep, ...rest], {
   stdio: "inherit",
   shell: process.platform === "win32",

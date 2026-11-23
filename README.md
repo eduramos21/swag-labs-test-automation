@@ -24,12 +24,50 @@ npm test locked_out_user
 npm run regression standard_user -- --headed    # extra Playwright flags go after --
 ```
 
-### Run everything for one user
+### Run a specific test for a specific user
+
+Format: `npm run <smoke|regression|test> <user> -- -g "<part of the test title>"`
 
 ```
-npm test standard_user
-npm test problem_user
-npm test locked_out_user
+npm run regression standard_user -- -g "3 random products open their own detail page"
+npm run regression problem_user -- -g "key information"
+npm run regression standard_user -- -g "key information" --headed --workers=1    # watch it
+```
+
+Use a part of the title: no need to type it all and no need for the `[user]` part. Titles are in the spec files under `e2e/tests/`. `npm run regression ... -- --list` shows all of them.
+
+### Run by test title, or headed
+
+`-g` is a regex on the test title. It combines with the suite and user (all must match). Titles end with the user, e.g. `[problem_user]`.
+
+```
+npm run regression problem_user -- -g "key information"    # one scenario, one user
+npm test -- -g "key information"                           # one scenario, every user
+npm test -- -g "key information \[problem_user\]"          # user picked via the title
+npm run test:headed -- -g "key information"                # headed, 1 worker, SLOWMO=500
+SLOWMO=1000 npm run test:headed                            # slower
+npm test -- --workers=4                                    # control parallelism
+```
+
+`test:headed`, `smoke:headed` and `regression:headed` always use `--workers=1`. For a user, add it to the title filter or use `npm run regression problem_user -- --headed --workers=1`.
+
+### Run everything for one user
+
+Users:
+
+```
+standard_user
+problem_user
+locked_out_user
+performance_glitch_user
+error_user
+visual_user
+```
+
+Command:
+
+```
+npm test <user>
 ```
 
 `npm test` is the `all` suite, so it runs smoke and regression together for that user. It takes extra flags too, for example `npm test standard_user -- --headed`. The Allure report is named `Swag Labs all standard_user`. `npm test` with no user, or `npm test all_users`, runs all 31 tests (29 tests plus 2 login setup tests).

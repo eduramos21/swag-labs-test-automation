@@ -7,6 +7,9 @@
     "test": "node scripts/run.js all",
     "smoke": "node scripts/run.js smoke",
     "regression": "node scripts/run.js regression",
+    "test:headed": "node scripts/run.js all --headed --workers=1",
+    "smoke:headed": "node scripts/run.js smoke --headed --workers=1",
+    "regression:headed": "node scripts/run.js regression --headed --workers=1",
     "check:tags": "node scripts/check-tags.js",
     "report": "allure generate allure-results -o allure-report --clean && allure open allure-report"
   },
@@ -19,7 +22,6 @@
     "@types/node": "^26.6.6",
     "allure": "^3.33.0",
     "allure-playwright": "^3.15.0",
-    "cross-env": "^10.1.0",
     "dotenv": "^18.0.10",
     "typescript": "^7.0.2"
   }

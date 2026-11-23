@@ -1,7 +1,14 @@
 // Fails when a test has no user tag or more than one, so it cannot silently drop out of a per-user run.
 const { execSync } = require("node:child_process");
 
-const users = ["standard_user", "problem_user", "locked_out_user"];
+const users = [
+  "standard_user",
+  "problem_user",
+  "locked_out_user",
+  "performance_glitch_user",
+  "error_user",
+  "visual_user",
+];
 const report = JSON.parse(
   execSync("npx playwright test --list --reporter=json", {
     encoding: "utf8",

@@ -5,7 +5,14 @@ const { rmSync } = require("node:fs");
 
 const [suite, user = "all_users", ...rest] = process.argv.slice(2);
 const suites = ["smoke", "regression", "all"];
-const users = ["standard_user", "problem_user", "locked_out_user"];
+const users = [
+  "standard_user",
+  "problem_user",
+  "locked_out_user",
+  "performance_glitch_user",
+  "error_user",
+  "visual_user",
+];
 if (
   !suites.includes(suite) ||
   (user !== "all_users" && !users.includes(user))

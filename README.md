@@ -42,7 +42,7 @@ npm test locked_out_user
 
 CI has no "all tests for one user" job: the smoke and regression jobs per user already cover the same tests.
 
-Users: `standard_user`, `problem_user`, `locked_out_user`. Each run starts with empty results, and its Allure report is named after the suite and user (`Swag Labs regression problem_user`). `npm run check:tags` fails when a test does not have exactly one user tag.
+Users: `standard_user`, `problem_user`, `locked_out_user`, `performance_glitch_user`, `error_user`, `visual_user`. Each run starts with empty results, and its Allure report is named after the suite and user (`Swag Labs regression problem_user`). `npm run check:tags` fails when a test does not have exactly one user tag.
 
 ## Red on purpose
 
@@ -76,7 +76,7 @@ With `SEED=off`, `problem_user` tests for BUG-03 and BUG-04 fail only when the r
 
 ## Login reuse
 
-`tests/auth.setup.ts` logs in `standard_user` and `problem_user` once per run and saves each session to `e2e/.auth/`. Every other test loads that session instead of using the login form. Only `login.spec.ts` uses the real form. Nothing to set up: the setup runs by itself before the tests.
+`tests/auth.setup.ts` logs in every user except `locked_out_user` once per run and saves each session to `e2e/.auth/`. Every other test loads that session instead of using the login form. Only `login.spec.ts` uses the real form. Nothing to set up: the setup runs by itself before the tests.
 
 ## Layout
 
@@ -90,13 +90,13 @@ e2e/
   .env.example  names and public demo values of the five variables
 ```
 
-Tests carry tags (not in the title): `@smoke` or `@regression` (never both, so no test runs twice), one user tag (`@standard_user`, `@problem_user`, `@locked_out_user`), plus `@BUG-xx` and `@OBS-xx`. Select with `npx playwright test --grep @BUG-03`. Every test loops over `sessionRoles` (`standard_user`, `problem_user`) and is tagged `@${user}`, so `npm run <suite> <user>` runs the same tests for whichever user you pick. Three exceptions: the username-with-spaces test (BUG-15) and the empty-cart test (BUG-01) are `problem_user` only, and the locked-out test is `locked_out_user` only (that user can never log in). The reasons are in `qa/design/swag-labs.md`, "User model". Allure shows every tag on the test and the suite and user in the report header.
+Tests carry tags (not in the title): `@smoke` or `@regression` (never both, so no test runs twice), one user tag (`@standard_user`, `@problem_user`, `@locked_out_user`, `@performance_glitch_user`, `@error_user`, `@visual_user`), plus `@BUG-xx` and `@OBS-xx`. Select with `npx playwright test --grep @BUG-03`. Every test loops over `sessionRoles` (every user except `locked_out_user`) and is tagged `@${user}`, so `npm run <suite> <user>` runs the same tests for whichever user you pick. Three exceptions: the username-with-spaces test (BUG-15) and the empty-cart test (BUG-01) are `problem_user` only, and the locked-out test is `locked_out_user` only (that user can never log in). The reasons are in `qa/design/swag-labs.md`, "User model". Allure shows every tag on the test and the suite and user in the report header.
 
 To add a user: add it to `roles` and `envVar` in `e2e/data/users.ts`, add its secret to the workflow env, add it to `sessionRoles` if it can log in (every looping test then runs for it), and add a row to the CI matrix.
 
 ## CI
 
-`.github/workflows/e2e.yml` runs one job per suite and user: smoke for `standard_user`, `problem_user` and `locked_out_user`, regression for `standard_user` and `problem_user`. Each job uploads its own Allure report (`allure-<suite>-<user>`), so the results of every combination are separate. The `problem_user` jobs are red on purpose (see above). `locked_out_user` has no regression job because its only test is a smoke test. The workflow reads `BASE_URL`, `STANDARD_USER`, `PROBLEM_USER`, `LOCKED_OUT_USER` and `PASSWORD` from GitHub secrets (Settings, Secrets and variables, Actions).
+`.github/workflows/e2e.yml` runs one job per suite and user: smoke for `standard_user`, `problem_user` and `locked_out_user`, regression for `standard_user` and `problem_user`. Each job uploads its own Allure report (`allure-<suite>-<user>`), so the results of every combination are separate. The `problem_user` jobs are red on purpose (see above). `locked_out_user` has no regression job because its only test is a smoke test. The workflow reads `BASE_URL`, `STANDARD_USER`, `PROBLEM_USER`, `LOCKED_OUT_USER`, `PERFORMANCE_GLITCH_USER`, `ERROR_USER`, `VISUAL_USER` and `PASSWORD` from GitHub secrets (Settings, Secrets and variables, Actions).
 
 ### Why tags and a runner instead of one Playwright project per user
 

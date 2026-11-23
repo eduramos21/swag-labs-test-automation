@@ -11,7 +11,9 @@ jobs:
     name: ${{ matrix.suite }} ${{ matrix.user }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    # One build per suite and user. problem_user jobs stay red on purpose (seeded app bugs).
+    # One build per suite and user. problem_user tests fail on purpose (seeded app bugs),
+    # so those jobs cannot fail the build. standard_user and locked_out_user jobs still do.
+    continue-on-error: ${{ matrix.user == 'problem_user' }}
     strategy:
       fail-fast: false
       matrix:

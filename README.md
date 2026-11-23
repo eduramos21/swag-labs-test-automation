@@ -55,7 +55,7 @@ Users: `standard_user`, `problem_user`, `locked_out_user`. Each run starts with 
 | Add 2 more to the cart (catalog, detail page) | red when a pick is a BUG-03 product, always red on the detail page | BUG-03, BUG-05/07, BUG-08 |
 | Remove from catalog, detail page              | red                                                                | BUG-04, BUG-06            |
 | Finish an order                               | red every run                                                      | BUG-02                    |
-| Checkout required fields                      | red at the postal code step                                        | problem_user checkout bug |
+| Checkout required fields                      | red at the postal code step                                        | BUG-02                    |
 
 Every test runs for every user (see "Tags" below). The two exceptions, the username-with-spaces test (BUG-15) and the empty-cart checkout test (BUG-01), run for `problem_user` only, so every `standard_user` test passes.
 

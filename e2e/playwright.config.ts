@@ -6,6 +6,7 @@ dotenv.config({ quiet: true });
 
 export default defineConfig({
   testDir: "./tests",
+  fullyParallel: true,
   timeout: 60_000,
   globalTeardown: "./data/report-hint.ts",
   forbidOnly: !!process.env.CI,

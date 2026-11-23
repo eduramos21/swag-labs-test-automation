@@ -53,12 +53,14 @@ Smoke runs standard_user, problem_user and locked_out_user. Regression runs stan
 | T1 login                | passes                                                             | none                      |
 | T6, T7                  | red                                                                | BUG-05/07, BUG-09         |
 | T8 catalog, detail page | red when picks include a BUG-03 product, always red on detail page | BUG-03, BUG-05/07, BUG-08 |
-| T12                     | red at the postal code step                                        | problem_user checkout bug |
+| T12                     | red at the postal code step (last name text lands in first name)   | BUG-02                    |
 | T9 cart page            | passes                                                             | none                      |
 | T9 catalog, detail page | red                                                                | BUG-04, BUG-06            |
 | T10                     | red, every run                                                     | BUG-02                    |
 
 Smoke is always red through T10. Regression uses a fixed seed that includes BUG-03 and BUG-04 products, so T8 and T9 are red there. T4 (BUG-15) runs for problem_user only, where it is red. T13 (BUG-01) also runs for problem_user only, so every standard_user run is green.
+
+**Decision: problem_user-only tests.** T4 (BUG-15, username with spaces) and T13 (BUG-01, empty cart) run for problem_user only. BUG-01 is reported against standard_user and the requirement says checkout is not allowed for any user, so a standard_user run would be red too. The suite keeps standard_user as the green baseline for regressions, and the two known standard_user bugs stay visible through the problem_user run. Revisit if standard_user is no longer meant to be the green baseline.
 
 ## Not covering
 
@@ -70,6 +72,11 @@ Smoke is always red through T10. Regression uses a fixed seed that includes BUG-
 | error_user, performance_glitch_user, visual_user | Out of scope per test plan                                                                                                          |
 | Cross-browser, mobile, load                      | Out of scope per test plan                                                                                                          |
 | Images shown per product (BUG-10)                | Manual, per test plan                                                                                                               |
+| Logout                                           | Not in the test plan or the coverage document                                                                                       |
+| Side menu links (About, Reset App State)         | Not in the test plan or the coverage document                                                                                       |
+| Checkout overview totals (subtotal, tax, total)  | Not in the test plan or the coverage document                                                                                       |
+| Cancel buttons (cart, checkout steps)            | Not in the test plan or the coverage document                                                                                       |
+| BUG-11 to BUG-14                                 | Seeded for performance_glitch_user and error_user. No test on purpose: those users are out of scope                                  |
 
 ## Explore instead
 

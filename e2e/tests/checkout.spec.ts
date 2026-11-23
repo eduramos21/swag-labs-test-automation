@@ -75,7 +75,7 @@ test.describe("checkout: placing an order and its validation", () => {
 
     test(
       `checkout information requires every field [${user}]`,
-      { tag: ["@regression", `@${user}`] },
+      { tag: ["@regression", `@${user}`, "@BUG-02"] },
       async ({ rng, seedCart, loginAs, header, cart, checkoutInfo }) => {
         const [product] = rng.pick(1);
 

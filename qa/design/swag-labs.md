@@ -1,6 +1,6 @@
 # Swag Labs test design
 
-Requirement: Qualyfize-assignment files 1-4 (Obsidian, Interview-Prep-Qualifyze). Designed: 2026-11-22
+Requirement: Qualifyze-assignment files 1-4 (Obsidian, Interview-Prep-Qualifyze). Designed: 2026-11-22
 
 Decisions: plain Playwright (no playwright-bdd), page objects as fixtures, known bugs stay red,
 seeded random products (`SEED` env, logged as report attachment), BUG tags as Playwright `tag` (not in titles); a test is `@smoke` or `@regression`, never both, and has one user tag.

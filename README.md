@@ -72,11 +72,11 @@ npm test <user>
 
 `npm test` is the `all` suite, so it runs smoke and regression together for that user. It takes extra flags too, for example `npm test standard_user -- --headed`. The Allure report is named `Swag Labs all standard_user`. `npm test` with no user, or `npm test all_users`, runs all 31 tests (29 tests plus 2 login setup tests).
 
-| User | Tests | With setup |
-| --- | --- | --- |
-| `standard_user` | 13 (4 smoke, 9 regression) | 15 |
-| `problem_user` | 15 (4 smoke, 11 regression) | 17 |
-| `locked_out_user` | 1 (smoke) | 3 |
+| User              | Tests                       | With setup |
+| ----------------- | --------------------------- | ---------- |
+| `standard_user`   | 13 (4 smoke, 9 regression)  | 15         |
+| `problem_user`    | 15 (4 smoke, 11 regression) | 17         |
+| `locked_out_user` | 1 (smoke)                   | 3          |
 
 CI has no "all tests for one user" job: the smoke and regression jobs per user already cover the same tests.
 
@@ -103,12 +103,12 @@ Cart, checkout and detail page tests pick products at random. The seed decides t
 
 `npm test`, `npm run smoke` and `npm run regression` default to `SEED=9`. With that seed the `problem_user` tests that hit BUG-03 and BUG-04 products fail on every run, in the same places. That is deterministic, not flaky (same failures on repeated runs of `regression problem_user`).
 
-| Command                                                          | Picks                                          |
-| ---------------------------------------------------------------- | ---------------------------------------------- |
-| `npm run regression`                                             | SEED 9, same products every run                |
-| `SEED=42 npm run regression`                                     | another fixed seed                             |
-| `SEED=off npm run regression`                                    | no seed, new random products every run         |
-| Windows PowerShell: `$env:SEED="off"; npm run regression`        | same as above                                  |
+| Command                                                   | Picks                                  |
+| --------------------------------------------------------- | -------------------------------------- |
+| `npm run regression`                                      | SEED 9, same products every run        |
+| `SEED=42 npm run regression`                              | another fixed seed                     |
+| `SEED=off npm run regression`                             | no seed, new random products every run |
+| Windows PowerShell: `$env:SEED="off"; npm run regression` | same as above                          |
 
 With `SEED=off`, `problem_user` tests for BUG-03 and BUG-04 fail only when the random picks include an affected product. A failing random run prints its seed in the report, replay it with `SEED=<n>`. Plain `npx playwright test` (without the runner) has no default seed and picks random products.
 
@@ -119,13 +119,18 @@ With `SEED=off`, `problem_user` tests for BUG-03 and BUG-04 fail only when the r
 ## Layout
 
 ```
-e2e/
-  tests/      specs by area: login, catalog, cart, checkout
-  pages/      one page object per screen, exposed as fixtures
-  fixtures/   test.extend: page objects, loginAs, seedCart, rng
-  .auth/      sessions saved by tests/auth.setup.ts (gitignored, created on each run)
-  data/       products, sort options, users, env, seeded random
-  .env.example  names and public demo values of the five variables
+├── e2e                       Playwright suite (TypeScript)
+│   ├── data                  users, products, env vars, seeded random picks
+│   ├── fixtures              page objects, login and cart-seeding fixtures
+│   ├── pages                 page objects, one per screen
+│   ├── scripts               run.js (suite and user runner), check-tags.js
+│   └── tests                 specs, tagged by suite, user and bug
+├── qa                        QA artefacts
+│   ├── audit                 dated suite audits
+│   ├── design                test design and user model
+│   └── opportunities.md      QA opportunities list
+├── qa.config.yml             QA framework config (stack, CI, tracker)
+└── .env.example              required environment variables
 ```
 
 Tests carry tags (not in the title): `@smoke` or `@regression` (never both, so no test runs twice), one user tag (`@standard_user`, `@problem_user`, `@locked_out_user`, `@performance_glitch_user`, `@error_user`, `@visual_user`), plus `@BUG-xx` and `@OBS-xx`. Select with `npx playwright test --grep @BUG-03`. Every test loops over `sessionRoles` (every user except `locked_out_user`) and is tagged `@${user}`, so `npm run <suite> <user>` runs the same tests for whichever user you pick. Three exceptions: the username-with-spaces test (BUG-15) and the empty-cart test (BUG-01) are `problem_user` only, and the locked-out test is `locked_out_user` only (that user can never log in). The reasons are in `qa/design/swag-labs.md`, "User model". Allure shows every tag on the test and the suite and user in the report header.

@@ -47,6 +47,10 @@ const test = base.extend<{ placeOrder: (user: Role) => Promise<void> }>({
         checkoutOverview.finish.click());
       await test.step('Then the confirmation "Thank you for your order!" is shown', () =>
         expect(checkoutComplete.header, "order confirmation").toBeVisible());
+      await test.step("And the dispatch message is shown in the body", () =>
+        expect(checkoutComplete.message, "order dispatch message").toHaveText(
+          "Your order has been dispatched, and will arrive just as fast as the pony can get there!",
+        ));
     });
   },
 });

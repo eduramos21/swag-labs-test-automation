@@ -4,7 +4,6 @@ const { spawnSync } = require("node:child_process");
 const { rmSync } = require("node:fs");
 
 const [suite, ...rest] = process.argv.slice(2);
-const user = rest[0] && !rest[0].startsWith("-") ? rest.shift() : "all_users";
 const suites = ["smoke", "regression", "all"];
 const users = [
   "standard_user",
@@ -14,6 +13,12 @@ const users = [
   "error_user",
   "visual_user",
 ];
+// User is the first plain arg; the :headed scripts put flags first, so then look for a known user.
+const ui =
+  rest[0] && !rest[0].startsWith("-")
+    ? 0
+    : rest.findIndex((a) => users.includes(a));
+const user = ui >= 0 ? rest.splice(ui, 1)[0] : "all_users";
 if (
   !suites.includes(suite) ||
   (user !== "all_users" && !users.includes(user))

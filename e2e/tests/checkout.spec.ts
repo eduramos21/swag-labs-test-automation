@@ -6,7 +6,7 @@ import { sessionRoles, type Role } from "../data/users";
 const test = base.extend<{ placeOrder: (user: Role) => Promise<void> }>({
   placeOrder: async (
     {
-      rng,
+      productPicker,
       seedCart,
       loginAs,
       header,
@@ -18,7 +18,7 @@ const test = base.extend<{ placeOrder: (user: Role) => Promise<void> }>({
     use,
   ) => {
     await use(async (user) => {
-      const picks = rng.pick(2);
+      const picks = productPicker.pick(2);
 
       await test.step(`Given ${user} is on the checkout information step with 2 random products in the cart`, async () => {
         await seedCart(picks.map((p) => p.id));
@@ -76,8 +76,15 @@ test.describe("checkout: placing an order and its validation", () => {
     test(
       `checkout information requires every field [${user}]`,
       { tag: ["@regression", `@${user}`, "@BUG-02"] },
-      async ({ rng, seedCart, loginAs, header, cart, checkoutInfo }) => {
-        const [product] = rng.pick(1);
+      async ({
+        productPicker,
+        seedCart,
+        loginAs,
+        header,
+        cart,
+        checkoutInfo,
+      }) => {
+        const [product] = productPicker.pick(1);
 
         await test.step(`Given ${user} is on the checkout information step with 1 random product in the cart`, async () => {
           await seedCart([product.id]);

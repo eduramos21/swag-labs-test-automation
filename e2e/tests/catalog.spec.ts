@@ -40,10 +40,10 @@ test.describe("product catalog: display, details and sorting", () => {
     test(
       `3 random products open their own detail page [${user}]`,
       { tag: ["@regression", `@${user}`, "@BUG-05", "@BUG-07"] },
-      async ({ loginAs, inventory, productDetail, rng }) => {
+      async ({ loginAs, inventory, productDetail, productPicker }) => {
         await test.step(`Given ${user} is logged in`, () => loginAs(user));
         await test.step("Then each of 3 random products opens a detail page showing that product", async () => {
-          for (const { name } of rng.pick(3)) {
+          for (const { name } of productPicker.pick(3)) {
             await inventory.goto();
             await inventory.openDetails(name);
             await expect

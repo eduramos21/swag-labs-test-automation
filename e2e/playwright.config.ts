@@ -28,7 +28,8 @@ export default defineConfig({
     baseURL: requireEnv("BASE_URL"),
     testIdAttribute: "data-test",
     actionTimeout: 10_000,
-    screenshot: "only-on-failure",
+    // fullPage: the header is not sticky, so a viewport shot of a scrolled page hides the cart
+    screenshot: { mode: "only-on-failure", fullPage: true },
     trace: "retain-on-failure",
     // SLOWMO=<ms> pauses after every action, for watching headed runs
     launchOptions: { slowMo: Number(process.env.SLOWMO) || 0 },

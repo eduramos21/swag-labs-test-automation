@@ -1,5 +1,5 @@
 import { test as base, expect } from "@playwright/test";
-import { createRng, type Rng } from "../data/random";
+import { createProductPicker, type ProductPicker } from "../data/random";
 import { readFileSync } from "node:fs";
 import { authFile, type Role } from "../data/users";
 import { CartPage } from "../pages/CartPage";
@@ -22,7 +22,7 @@ interface Fixtures {
   header: Header;
   loginAs: (role: Role) => Promise<void>;
   seedCart: (productIds: number[]) => Promise<void>;
-  rng: Rng;
+  productPicker: ProductPicker;
   highlight: void;
 }
 
@@ -85,7 +85,7 @@ export const test = base.extend<Fixtures>({
     { auto: true },
   ],
 
-  rng: async ({}, use, testInfo) => {
+  productPicker: async ({}, use, testInfo) => {
     const seed = Number(
       process.env.SEED ?? Math.floor(Math.random() * 2 ** 31),
     );
@@ -95,7 +95,7 @@ export const test = base.extend<Fixtures>({
       body: String(seed),
       contentType: "text/plain",
     });
-    await use(createRng(seed));
+    await use(createProductPicker(seed));
   },
 });
 

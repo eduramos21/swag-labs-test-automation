@@ -29,15 +29,15 @@ Then open a new terminal and run `node --version` again.
 
 ## Run tests
 
-Pattern: `npm run <smoke|regression|test> [user] [-- playwright flags]`
+Pattern: `npm run <smoke|regression|test> [user] [-- playwright flags]`. For one scenario, use `npm test`: it has no suite filter.
 
-| Goal               | Command                                                   |
-| ------------------ | --------------------------------------------------------- |
-| Smoke, every user  | `npm run smoke`                                           |
-| Regression, 1 user | `npm run regression problem_user`                         |
-| Everything, 1 user | `npm test standard_user`                                  |
-| One scenario       | `npm run regression problem_user -- -g "key information"` |
-| Watch it (headed)  | `npm run test:headed -- -g "key information"`             |
+| Goal               | Command                                         |
+| ------------------ | ----------------------------------------------- |
+| Smoke, every user  | `npm run smoke`                                 |
+| Regression, 1 user | `npm run regression problem_user`               |
+| Everything, 1 user | `npm test standard_user`                        |
+| One scenario       | `npm test problem_user -- -g "key information"` |
+| Watch it (headed)  | `npm run test:headed -- -g "key information"`   |
 
 Notes:
 

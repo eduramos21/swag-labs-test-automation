@@ -1,6 +1,6 @@
 import { products, type Product } from "./products";
 
-export interface Rng {
+export interface ProductPicker {
   pick(count: number): Product[];
 }
 
@@ -15,7 +15,7 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-export function createRng(seed: number): Rng {
+export function createProductPicker(seed: number): ProductPicker {
   return {
     // Every call replays the sequence, so pick(2) is the first two of pick(3).
     pick(count) {

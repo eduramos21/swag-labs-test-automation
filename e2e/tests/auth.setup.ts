@@ -2,8 +2,6 @@ import { expect, test } from "../fixtures";
 import { authFile, password, sessionRoles, usernameOf } from "../data/users";
 
 // Logs in once per user and saves the session. loginAs() in fixtures reuses it.
-// Playwright runs this project in full before any filtered run, so the runner's RUN_USER limits it.
-// shortcut: plain `npx playwright test --grep @user` (no runner) still logs in every user.
 const runUser = process.env.RUN_USER;
 for (const user of sessionRoles.filter(
   (r) => !runUser || runUser === "all_users" || r === runUser,

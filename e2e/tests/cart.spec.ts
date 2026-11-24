@@ -22,7 +22,7 @@ test.describe("cart: adding and removing products", () => {
           ],
         },
         async ({
-          rng,
+          productPicker,
           seedCart,
           loginAs,
           header,
@@ -30,13 +30,13 @@ test.describe("cart: adding and removing products", () => {
           inventory,
           productDetail,
         }) => {
-          const [first, ...more] = rng.pick(3);
+          const [first, ...more] = productPicker.pick(3);
 
           await test.step(`Given ${user} is logged in with 1 random product in the cart`, async () => {
             await seedCart([first.id]);
             await loginAs(user);
           });
-          await test.step(`When ${user} continues shopping and adds 2 more random products from the ${place}`, async () => {
+          await test.step(`When ${user} clicks continue shopping and adds 2 more random products from the ${place}`, async () => {
             await header.cartLink.click();
             await cart.continueShopping.click();
             for (const { name } of more) {
@@ -82,7 +82,7 @@ test.describe("cart: adding and removing products", () => {
           tag: [...tags, `@${user}`, "@BUG-04", "@BUG-06"],
         },
         async ({
-          rng,
+          productPicker,
           seedCart,
           loginAs,
           header,
@@ -90,7 +90,7 @@ test.describe("cart: adding and removing products", () => {
           inventory,
           productDetail,
         }) => {
-          const picks = rng.pick(3);
+          const picks = productPicker.pick(3);
 
           await test.step(`Given ${user} is logged in with 3 random products in the cart`, async () => {
             await seedCart(picks.map((p) => p.id));

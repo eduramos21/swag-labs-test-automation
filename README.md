@@ -4,7 +4,7 @@ Playwright (TypeScript) end-to-end tests for [Swag Labs](https://www.saucedemo.c
 
 ## Quick start (about 5 minutes)
 
-1. Install [Node.js](https://nodejs.org) 20 or newer.
+1. Run `node --version`. It must print `v20` or higher. If not, see "Install Node.js" below, then come back.
 2. `git clone <repo-url>` (or download the ZIP and unzip it).
 3. `cd e2e && npm ci`
 4. `npx playwright install chromium`
@@ -12,7 +12,20 @@ Playwright (TypeScript) end-to-end tests for [Swag Labs](https://www.saucedemo.c
 6. `npm run smoke`
 7. `npm run report` opens the Allure report.
 
-Done when step 6 is green and step 7 shows the report.
+If your goal is to run the tests you're done when step 6 is okay. If you want to see the report continue to step 7.
+
+### Install Node.js
+
+Only if `node --version` fails or prints a version below `v20`.
+
+| System  | Command                                                                      |
+| ------- | ---------------------------------------------------------------------------- |
+| Any     | Download the LTS installer from [nodejs.org](https://nodejs.org) and run it. |
+| macOS   | `brew install node`                                                          |
+| Windows | `winget install OpenJS.NodeJS.LTS`                                           |
+| Linux   | Use [nvm](https://github.com/nvm-sh/nvm): `nvm install --lts`                |
+
+Then open a new terminal and run `node --version` again.
 
 ## Run tests
 

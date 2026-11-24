@@ -39,7 +39,7 @@ const env = { SEED: "9", ...process.env, RUN_SUITE: suite, RUN_USER: user };
 if (env.SEED === "off") delete env.SEED;
 // Headed runs are for watching: slow them down and outline interactions. Set SLOWMO=0 / HIGHLIGHT= to opt out.
 if (rest.includes("--headed")) {
-  env.SLOWMO ??= "500";
+  env.SLOWMO ??= "850";
   env.HIGHLIGHT ??= "1";
 }
 const result = spawnSync("npx", ["playwright", "test", ...grep, ...rest], {

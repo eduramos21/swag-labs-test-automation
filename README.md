@@ -121,7 +121,7 @@ In case of error when running the tests, check this table:
 └── qa.config.yml             QA framework config (stack, CI, tracker)
 ```
 
-Requirements: [Test Cases - Product Coverage](docs/requirements/2-%20Test%20Cases%20-%20Product%20Coverage.md), [Bug Report](docs/requirements/3-%20Bug%20Report.md).
+Requirements: [Test Cases - Product Coverage](docs/requirements/Test%20Cases%20-%20Product%20Coverage.md), [Bug Report](docs/requirements/Bug%20Report.md).
 
 ## Tags
 

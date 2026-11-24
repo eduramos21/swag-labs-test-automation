@@ -29,7 +29,8 @@ Pattern: `npm run <smoke|regression|test> [user] [-- playwright flags]`
 Notes:
 
 - No user, or `all_users`, runs every user.
-- `npm test` is the `all` suite: smoke and regression together. With no user it runs 31 tests (29 tests plus 2 login setup tests).
+- Smoke tests are also tagged `@regression`, so regression includes smoke. `npm test` runs the same tests as regression plus `locked_out_user`'s one test.
+- `npm test` with no user runs 64 tests: 59 tests plus 5 login setup tests (one per user that can log in).
 - `-g` is a regex on the test title. Use a part of the title. Titles end with the user, for example `[problem_user]`. `-- --list` shows all titles.
 - Headed scripts (`test:headed`, `smoke:headed`, `regression:headed`) use `--workers=1`. Speed: `SLOWMO=1000 npm run test:headed`.
 - Parallelism: `npm test -- --workers=4`.
@@ -39,11 +40,17 @@ Notes:
 
 `standard_user`, `problem_user`, `locked_out_user`, `performance_glitch_user`, `error_user`, `visual_user`
 
-| User              | Tests                       | With setup |
-| ----------------- | --------------------------- | ---------- |
-| `standard_user`   | 13 (4 smoke, 9 regression)  | 15         |
-| `problem_user`    | 15 (4 smoke, 11 regression) | 17         |
-| `locked_out_user` | 1 (smoke)                   | 3          |
+| User                      | Tests          | With setup |
+| ------------------------- | -------------- | ---------- |
+| `standard_user`           | 13 (4 smoke)   | 14         |
+| `problem_user`            | 15 (4 smoke)   | 16         |
+| `locked_out_user`         | 1 (smoke only) | 1          |
+| `performance_glitch_user` | 10 (3 smoke)   | 11         |
+| `error_user`              | 10 (3 smoke)   | 11         |
+
+On execution, test count add +1 for the login setup test.
+
+`visual_user` has the same counts as `error_user`. "With setup" adds the one login setup test for that user. `locked_out_user` needs no setup.
 
 ## Red on purpose
 
@@ -59,20 +66,28 @@ Notes:
 
 Every `standard_user` test passes. Two tests run for `problem_user` only: username with spaces (BUG-15) and empty-cart checkout (BUG-01).
 
-## Random products and SEED
+## Troubleshooting and FAQ
 
-Cart, checkout and detail page tests pick products at random. The seed fixes the picks, so a failure reproduces. The seed is attached to each test in the Allure report.
+**`npm error ENOENT ... package.json` when running `npm test`**
+You are in the repo root. Run `cd e2e` first. Every `npm` command in this README runs inside `e2e/`.
 
-`npm test`, `npm run smoke` and `npm run regression` default to `SEED=9`. With it, `problem_user` fails on BUG-03 and BUG-04 products in the same places every run. That is deterministic, not flaky.
+**`Usage: run.js <smoke|regression|all> [user] ...`**
+The user name is wrong or shortened (for example `standard` instead of `standard_user`). Use the full name: `standard_user`, `problem_user`, `locked_out_user`, `performance_glitch_user`, `error_user`, `visual_user`, or `all_users`.
 
-| Command                                                   | Picks                           |
-| --------------------------------------------------------- | ------------------------------- |
-| `npm run regression`                                      | SEED 9, same products every run |
-| `SEED=42 npm run regression`                              | another fixed seed              |
-| `SEED=off npm run regression`                             | new random products every run   |
-| Windows PowerShell: `$env:SEED="off"; npm run regression` | same as above                   |
+**Tests fail with a missing env var or login error**
+`.env` is missing. Run `cp .env.example .env` (Windows: `copy .env.example .env`) inside `e2e/`.
 
-With `SEED=off`, BUG-03 and BUG-04 tests fail only when the picks include an affected product. A failing random run prints its seed in the report. Replay it with `SEED=<n>`. Plain `npx playwright test` has no default seed.
+**`Executable doesn't exist` from Playwright**
+The browser is not installed. Run `npx playwright install chromium`.
+
+**`problem_user` tests are red**
+Expected. See "Red on purpose".
+
+**`npm run regression locked_out_user` runs 0 tests**
+Expected. That user has one test, and it is smoke only. Run `npm run smoke locked_out_user`.
+
+**A failure does not reproduce on the next run**
+Check the seed in the Allure report. Replay it with `SEED=<n>`.
 
 ## Login reuse
 
@@ -119,3 +134,18 @@ Every test loops over `sessionRoles` (every user except `locked_out_user`) and g
 Each job uploads its own report: `allure-<suite>-<user>`. The `problem_user` jobs are red on purpose. `locked_out_user` has no regression job: its only test is smoke. There is no "all tests for one user" job: the jobs above already cover the same tests.
 
 Set these GitHub secrets (Settings, Secrets and variables, Actions): `BASE_URL`, `STANDARD_USER`, `PROBLEM_USER`, `LOCKED_OUT_USER`, `PERFORMANCE_GLITCH_USER`, `ERROR_USER`, `VISUAL_USER`, `PASSWORD`.
+
+## Random products and SEED
+
+Cart, checkout and detail page tests pick products at random. The seed fixes the picks, so a failure reproduces. The seed is attached to each test in the Allure report.
+
+`npm test`, `npm run smoke` and `npm run regression` default to `SEED=9`. With it, `problem_user` fails on BUG-03 and BUG-04 products in the same places every run. That is deterministic, not flaky.
+
+| Command                                                   | Picks                           |
+| --------------------------------------------------------- | ------------------------------- |
+| `npm run regression`                                      | SEED 9, same products every run |
+| `SEED=42 npm run regression`                              | another fixed seed              |
+| `SEED=off npm run regression`                             | new random products every run   |
+| Windows PowerShell: `$env:SEED="off"; npm run regression` | same as above                   |
+
+With `SEED=off`, BUG-03 and BUG-04 tests fail only when the picks include an affected product. A failing random run prints its seed in the report. Replay it with `SEED=<n>`. Plain `npx playwright test` has no default seed.

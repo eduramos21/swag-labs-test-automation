@@ -12,7 +12,14 @@ test.describe("cart: adding and removing products", () => {
       test(
         `keep shopping and add more products to the cart [${user}, ${place}]`,
         {
-          tag: [...tags, `@${user}`, "@BUG-03", "@BUG-05", "@BUG-07", "@BUG-08"],
+          tag: [
+            ...tags,
+            `@${user}`,
+            "@BUG-03",
+            "@BUG-05",
+            "@BUG-07",
+            "@BUG-08",
+          ],
         },
         async ({
           rng,
@@ -62,58 +69,59 @@ test.describe("cart: adding and removing products", () => {
   }
 
   const removePlaces = [
-    { user: "standard_user", place: "cart page", tags: ["@smoke", "@regression"] },
-    { user: "problem_user", place: "cart page", tags: ["@smoke", "@regression"] },
-    { user: "standard_user", place: "catalog", tags: ["@regression"] },
-    { user: "standard_user", place: "detail page", tags: ["@regression"] },
-    { user: "problem_user", place: "catalog", tags: ["@regression"] },
-    { user: "problem_user", place: "detail page", tags: ["@regression"] },
+    { place: "cart page", tags: ["@smoke", "@regression"] },
+    { place: "catalog", tags: ["@regression"] },
+    { place: "detail page", tags: ["@regression"] },
   ] as const;
 
-  for (const { user, place, tags } of removePlaces) {
-    test(
-      `remove products from the cart [${user}, ${place}]`,
-      {
-        tag: [...tags, `@${user}`, "@BUG-04", "@BUG-06"],
-      },
-      async ({
-        rng,
-        seedCart,
-        loginAs,
-        header,
-        cart,
-        inventory,
-        productDetail,
-      }) => {
-        const picks = rng.pick(3);
+  for (const user of users) {
+    for (const { place, tags } of removePlaces) {
+      test(
+        `remove products from the cart [${user}, ${place}]`,
+        {
+          tag: [...tags, `@${user}`, "@BUG-04", "@BUG-06"],
+        },
+        async ({
+          rng,
+          seedCart,
+          loginAs,
+          header,
+          cart,
+          inventory,
+          productDetail,
+        }) => {
+          const picks = rng.pick(3);
 
-        await test.step(`Given ${user} is logged in with 3 random products in the cart`, async () => {
-          await seedCart(picks.map((p) => p.id));
-          await loginAs(user);
-        });
-        await test.step(`When ${user} removes those products from the ${place}`, async () => {
-          if (place === "cart page") await header.cartLink.click();
-          for (const { name } of picks) {
-            if (place === "cart page") {
-              await cart.removeButton(name).click();
-            } else if (place === "catalog") {
-              await inventory.removeButton(name).click();
-            } else {
-              await inventory.openDetails(name);
-              await productDetail.removeButton.click();
-              await productDetail.backToProducts.click();
+          await test.step(`Given ${user} is logged in with 3 random products in the cart`, async () => {
+            await seedCart(picks.map((p) => p.id));
+            await loginAs(user);
+          });
+          await test.step(`When ${user} removes those products from the ${place}`, async () => {
+            if (place === "cart page") await header.cartLink.click();
+            for (const { name } of picks) {
+              if (place === "cart page") {
+                await cart.removeButton(name).click();
+              } else if (place === "catalog") {
+                await inventory.removeButton(name).click();
+              } else {
+                await inventory.openDetails(name);
+                await productDetail.removeButton.click();
+                await productDetail.backToProducts.click();
+              }
             }
-          }
-        });
-        await test.step("Then the cart is empty", async () => {
-          await expect(
-            header.cartBadge,
-            `badge after removing ${picks.map((p) => p.name).join(", ")}`,
-          ).toBeHidden();
-          await header.cartLink.click();
-          await expect(cart.items, "products left in the cart").toHaveCount(0);
-        });
-      },
-    );
+          });
+          await test.step("Then the cart is empty", async () => {
+            await expect(
+              header.cartBadge,
+              `badge after removing ${picks.map((p) => p.name).join(", ")}`,
+            ).toBeHidden();
+            await header.cartLink.click();
+            await expect(cart.items, "products left in the cart").toHaveCount(
+              0,
+            );
+          });
+        },
+      );
+    }
   }
 });

@@ -12,7 +12,7 @@ Playwright (TypeScript) end-to-end tests for [Swag Labs](https://www.saucedemo.c
 6. `npm run smoke`
 7. `npm run report` opens the Allure report.
 
-If your goal is to run the tests you're done when step 6 is okay. If you want to see the report continue to step 7.
+If your goal is to run the tests you're done when step 6 runs successfully. If you want to see the report continue to step 7.
 
 ### Install Node.js
 
@@ -43,7 +43,7 @@ Notes:
 
 - No user, or `all_users`, runs every user.
 - Smoke tests are also tagged `@regression`, so regression includes smoke. `npm test` runs the same tests as regression plus `locked_out_user`'s one test.
-- `npm test` with no user runs 64 tests: 59 tests plus 5 login setup tests (one per user that can log in).
+- `npm test` with no user runs 73 tests: 68 tests plus 5 login setup tests (one per user that can log in).
 - `-g` is a regex on the test title. Use a part of the title. Titles end with the user, for example `[problem_user]`. `-- --list` shows all titles.
 - Headed scripts (`test:headed`, `smoke:headed`, `regression:headed`) use `--workers=1`. Speed: `SLOWMO=1000 npm run test:headed`.
 - Parallelism: `npm test -- --workers=4`.
@@ -53,15 +53,15 @@ Notes:
 
 `standard_user`, `problem_user`, `locked_out_user`, `performance_glitch_user`, `error_user`, `visual_user`
 
-| User                      | Tests          | With setup |
-| ------------------------- | -------------- | ---------- |
-| `standard_user`           | 13 (4 smoke)   | 14         |
-| `problem_user`            | 15 (4 smoke)   | 16         |
-| `locked_out_user`         | 1 (smoke only) | 1          |
-| `performance_glitch_user` | 10 (3 smoke)   | 11         |
-| `error_user`              | 10 (3 smoke)   | 11         |
+| User                        | Tests          | With login setup |
+| --------------------------- | -------------- | ---------------- |
+| `standard_user`             | 13 (4 smoke)   | 14               |
+| `problem_user`              | 15 (4 smoke)   | 16               |
+| `locked_out_user`           | 1 (smoke only) | 1                |
+| `performance_glitch_user`   | 13 (4 smoke)   | 14               |
+| `error_user`, `visual_user` | 13 (4 smoke)   | 14               |
 
-`visual_user` has the same counts as `error_user`. "With setup" adds the one login setup test for that user. `locked_out_user` needs no setup.
+"With login setup" adds one login test for that user. `locked_out_user` needs no setup.
 
 ## Login reuse
 
@@ -121,7 +121,7 @@ In case of error when running the tests, check this table:
 
 ## Tags
 
-Tags are not in the title. Every test has:
+Every test has:
 
 - One suite tag: `@smoke` or `@regression`. Add both tags to run in both.
 - One user tag passed as parameter in the test: `@${user}`.

@@ -53,20 +53,14 @@ export const test = base.extend<Fixtures>({
 
   // Writes the app's own cart storage before it loads, so catalog bugs cannot break setup.
   // The session flag stops the script from overwriting the cart on later page loads.
-  seedCart: async ({ page, header, inventory }, use) => {
-    let seeded = false;
+  seedCart: async ({ page }, use) => {
     await use(async (productIds) => {
-      seeded = true;
       await page.addInitScript((ids) => {
         if (sessionStorage.getItem("cart-seeded")) return;
         sessionStorage.setItem("cart-seeded", "1");
         localStorage.setItem("cart-contents", JSON.stringify(ids));
       }, productIds);
     });
-    if (seeded) {
-      await inventory.goto();
-      await header.resetAppState();
-    }
   },
 
   // HIGHLIGHT=1 (set by run.js on headed runs) outlines each element the test clicks, types in or selects.

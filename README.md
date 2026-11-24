@@ -105,9 +105,12 @@ In case of error when running the tests, check this table:
 ## Layout
 
 ```
+├── docs
+│   └── requirements          test cases (product coverage) and bug report
 ├── e2e                       Playwright suite (TypeScript)
+│   ├── .env.example          required environment variables
 │   ├── data                  users, products, env vars, seeded random picks
-│   ├── fixtures              page objects, login and cart-seeding fixtures
+│   ├── fixtures              Playwright fixtures: page objects, login, cart seeding
 │   ├── pages                 page objects, one per screen
 │   ├── scripts               run.js (suite and user runner), check-tags.js
 │   └── tests                 specs, tagged by suite, user and bug
@@ -115,9 +118,10 @@ In case of error when running the tests, check this table:
 │   ├── audit                 dated suite audits
 │   ├── design                test design and user model
 │   └── opportunities.md      QA opportunities list
-├── qa.config.yml             QA framework config (stack, CI, tracker)
-└── .env.example              required environment variables
+└── qa.config.yml             QA framework config (stack, CI, tracker)
 ```
+
+Requirements: [Test Cases - Product Coverage](docs/requirements/2-%20Test%20Cases%20-%20Product%20Coverage.md), [Bug Report](docs/requirements/3-%20Bug%20Report.md).
 
 ## Tags
 

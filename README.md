@@ -67,7 +67,7 @@ Notes:
 
 On execution, test count add +1 for the login setup test because `tests/auth.setup.ts` logs in every user except `locked_out_user` once per run. It saves each session to `e2e/.auth/`. Other tests load that session. Only `login.spec.ts` uses the real form. No setup needed: it runs before the tests.
 
-## Red on purpose
+## Failing tests
 
 `problem_user` has seeded app bugs. The tests assert the intended behaviour, so some fail by design. They report real defects. They are not flaky.
 

@@ -131,7 +131,9 @@ Every test has:
 - One user tag passed as parameter in the test: `@${user}`.
 - Optional `@BUG-xx` and `@OBS-xx`.
 
-Select by tag: `npx playwright test --grep @BUG-03`
+`@BUG-xx` is only on `problem_user` tests. It marks a known bug. A red test with `@BUG` is expected. A red test without it is new.
+
+List the tests with a bug tag: `npx playwright test --list --no-deps --grep "@BUG"`
 
 `npm run check:tags` fails when a test does not have exactly one user tag.
 

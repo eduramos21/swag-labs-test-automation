@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures";
+import { bugTags } from "../data/bugs";
 import { sessionRoles as users } from "../data/users";
 
 test.describe("cart: adding and removing products", () => {
@@ -15,10 +16,7 @@ test.describe("cart: adding and removing products", () => {
           tag: [
             ...tags,
             `@${user}`,
-            "@BUG-03",
-            "@BUG-05",
-            "@BUG-07",
-            "@BUG-08",
+            ...bugTags(user, "BUG-03", "BUG-05", "BUG-07", "BUG-08"),
           ],
         },
         async ({
@@ -79,7 +77,7 @@ test.describe("cart: adding and removing products", () => {
       test(
         `remove products from the cart [${user}, ${place}]`,
         {
-          tag: [...tags, `@${user}`, "@BUG-04", "@BUG-06"],
+          tag: [...tags, `@${user}`, ...bugTags(user, "BUG-04", "BUG-06")],
         },
         async ({
           productPicker,

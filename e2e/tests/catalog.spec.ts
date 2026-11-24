@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures";
+import { bugTags } from "../data/bugs";
 import { sessionRoles } from "../data/users";
 import { expectedOrder, products, sortOptions } from "../data/products";
 
@@ -39,7 +40,9 @@ test.describe("product catalog: display, details and sorting", () => {
   for (const user of sessionRoles) {
     test(
       `3 random products open their own detail page [${user}]`,
-      { tag: ["@regression", `@${user}`, "@BUG-05", "@BUG-07"] },
+      {
+        tag: ["@regression", `@${user}`, ...bugTags(user, "BUG-05", "BUG-07")],
+      },
       async ({ loginAs, inventory, productDetail, productPicker }) => {
         await test.step(`Given ${user} is logged in`, () => loginAs(user));
         await test.step("Then each of 3 random products opens a detail page showing that product", async () => {
@@ -56,7 +59,7 @@ test.describe("product catalog: display, details and sorting", () => {
 
     test(
       `products are sorted by every option [${user}]`,
-      { tag: ["@regression", `@${user}`, "@BUG-09"] },
+      { tag: ["@regression", `@${user}`, ...bugTags(user, "BUG-09")] },
       async ({ loginAs, inventory }) => {
         await test.step(`Given ${user} is logged in`, () => loginAs(user));
         await test.step("Then the products are listed in the order of each sort option", async () => {

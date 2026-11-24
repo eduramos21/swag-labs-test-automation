@@ -1,5 +1,6 @@
 import { stat } from "node:fs/promises";
 import { expect, test as base } from "../fixtures";
+import { bugTags } from "../data/bugs";
 import { sessionRoles, type Role } from "../data/users";
 
 // Steps shared by every user's order test.
@@ -54,7 +55,9 @@ test.describe("checkout: placing an order and its validation", () => {
   for (const user of sessionRoles) {
     test(
       `an order is finished and its PDF downloads [${user}]`,
-      { tag: ["@smoke", "@regression", `@${user}`, "@BUG-02"] },
+      {
+        tag: ["@smoke", "@regression", `@${user}`, ...bugTags(user, "BUG-02")],
+      },
       async ({ page, placeOrder, checkoutComplete }) => {
         await placeOrder(user);
 
@@ -75,7 +78,7 @@ test.describe("checkout: placing an order and its validation", () => {
 
     test(
       `checkout information requires every field [${user}]`,
-      { tag: ["@regression", `@${user}`, "@BUG-02"] },
+      { tag: ["@regression", `@${user}`, ...bugTags(user, "BUG-02")] },
       async ({
         productPicker,
         seedCart,

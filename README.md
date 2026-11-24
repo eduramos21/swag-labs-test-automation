@@ -48,9 +48,11 @@ Notes:
 | `performance_glitch_user` | 10 (3 smoke)   | 11         |
 | `error_user`              | 10 (3 smoke)   | 11         |
 
-On execution, test count add +1 for the login setup test.
-
 `visual_user` has the same counts as `error_user`. "With setup" adds the one login setup test for that user. `locked_out_user` needs no setup.
+
+## Login reuse
+
+On execution, test count add +1 for the login setup test because `tests/auth.setup.ts` logs in every user except `locked_out_user` once per run. It saves each session to `e2e/.auth/`. Other tests load that session. Only `login.spec.ts` uses the real form. No setup needed: it runs before the tests.
 
 ## Red on purpose
 
@@ -68,30 +70,24 @@ Every `standard_user` test passes. Two tests run for `problem_user` only: userna
 
 ## Troubleshooting and FAQ
 
-**`npm error ENOENT ... package.json` when running `npm test`**
-You are in the repo root. Run `cd e2e` first. Every `npm` command in this README runs inside `e2e/`.
+In case of error when running the tests, check this table:
 
-**`Usage: run.js <smoke|regression|all> [user] ...`**
-The user name is wrong or shortened (for example `standard` instead of `standard_user`). Use the full name: `standard_user`, `problem_user`, `locked_out_user`, `performance_glitch_user`, `error_user`, `visual_user`, or `all_users`.
+### Errors
 
-**Tests fail with a missing env var or login error**
-`.env` is missing. Run `cp .env.example .env` (Windows: `copy .env.example .env`) inside `e2e/`.
+| You see                                  | Run this                                                                     |
+| ---------------------------------------- | ---------------------------------------------------------------------------- |
+| `ENOENT ... package.json`                | `cd e2e`. Every `npm` command runs inside `e2e/`.                            |
+| `Usage: run.js <smoke\|regression\|all>` | Use the full user name, e.g. `standard_user`, not a part of it. See "Users". |
+| Missing env var or login error           | `cp .env.example .env` (Windows: `copy .env.example .env`)                   |
+| `Executable doesn't exist`               | `npx playwright install chromium`                                            |
 
-**`Executable doesn't exist` from Playwright**
-The browser is not installed. Run `npx playwright install chromium`.
+### Not errors
 
-**`problem_user` tests are red**
-Expected. See "Red on purpose".
-
-**`npm run regression locked_out_user` runs 0 tests**
-Expected. That user has one test, and it is smoke only. Run `npm run smoke locked_out_user`.
-
-**A failure does not reproduce on the next run**
-Check the seed in the Allure report. Replay it with `SEED=<n>`.
-
-## Login reuse
-
-`tests/auth.setup.ts` logs in every user except `locked_out_user` once per run. It saves each session to `e2e/.auth/`. Other tests load that session. Only `login.spec.ts` uses the real form. No setup needed: it runs before the tests.
+| You see                                          | Why                                                                    |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| `problem_user` tests are red                     | Seeded bugs, on purpose. See "Red on purpose".                         |
+| `regression locked_out_user` runs 0 tests        | That user has 1 test, smoke only. Run `npm run smoke locked_out_user`. |
+| A random failure does not repeat on the next run | The picks changed. Find the seed in the Allure report, run `SEED=<n>`. |
 
 ## Layout
 

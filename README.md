@@ -71,13 +71,14 @@ On execution, test count add +1 for the login setup test because `tests/auth.set
 
 `problem_user` has seeded app bugs. The tests assert the intended behaviour, so some fail by design. They report real defects. They are not flaky.
 
-| Test (problem_user)                           | Result                                                       | Bug                       |
-| --------------------------------------------- | ------------------------------------------------------------ | ------------------------- |
-| Login, remove from cart page                  | pass                                                         | none                      |
-| Detail pages, sorting                         | red                                                          | BUG-05/07, BUG-09         |
-| Add 2 more to the cart (catalog, detail page) | red if a pick is a BUG-03 product; always red on detail page | BUG-03, BUG-05/07, BUG-08 |
-| Remove from catalog, detail page              | red                                                          | BUG-04, BUG-06            |
-| Finish an order, checkout required fields     | red every run (fields: red at the postal code step)          | BUG-02                    |
+| Test (problem_user)                       | Result                                              | Bug            |
+| ----------------------------------------- | --------------------------------------------------- | -------------- |
+| Login, remove from cart page              | pass                                                | none           |
+| Detail pages, sorting                     | red                                                 | BUG-05, BUG-09 |
+| Add 2 more to the cart (catalog)          | red if a pick is a BUG-03 product                   | BUG-03         |
+| Add 2 more to the cart (detail page)      | always red                                          | BUG-05         |
+| Remove from catalog, detail page          | red                                                 | BUG-04, BUG-06 |
+| Finish an order, checkout required fields | red every run (fields: red at the postal code step) | BUG-02         |
 
 Every `standard_user` test passes. Two tests run for `problem_user` only: username with spaces (BUG-15) and empty-cart checkout (BUG-01).
 

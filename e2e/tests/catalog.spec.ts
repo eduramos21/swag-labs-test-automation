@@ -40,9 +40,7 @@ test.describe("product catalog: display, details and sorting", () => {
   for (const user of sessionRoles) {
     test(
       `3 random products open their own detail page [${user}]`,
-      {
-        tag: ["@regression", `@${user}`, ...bugTags(user, "BUG-05", "BUG-07")],
-      },
+      { tag: ["@regression", `@${user}`, ...bugTags(user, "BUG-05")] },
       async ({ loginAs, inventory, productDetail, productPicker }) => {
         await test.step(`Given ${user} is logged in`, () => loginAs(user));
         await test.step("Then each of 3 random products opens a detail page showing that product", async () => {

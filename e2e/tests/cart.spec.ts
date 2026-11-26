@@ -4,20 +4,16 @@ import { sessionRoles as users } from "../data/users";
 
 test.describe("cart: adding and removing products", () => {
   const addPlaces = [
-    { place: "catalog", tags: ["@smoke", "@regression"] },
-    { place: "detail page", tags: ["@regression"] },
+    { place: "catalog", tags: ["@smoke", "@regression"], bugs: ["BUG-03"] },
+    { place: "detail page", tags: ["@regression"], bugs: ["BUG-05"] },
   ] as const;
 
   for (const user of users) {
-    for (const { place, tags } of addPlaces) {
+    for (const { place, tags, bugs } of addPlaces) {
       test(
         `keep shopping and add more products to the cart [${user}, ${place}]`,
         {
-          tag: [
-            ...tags,
-            `@${user}`,
-            ...bugTags(user, "BUG-03", "BUG-05", "BUG-07", "BUG-08"),
-          ],
+          tag: [...tags, `@${user}`, ...bugTags(user, ...bugs)],
         },
         async ({
           productPicker,
@@ -67,17 +63,17 @@ test.describe("cart: adding and removing products", () => {
   }
 
   const removePlaces = [
-    { place: "cart page", tags: ["@smoke", "@regression"] },
-    { place: "catalog", tags: ["@regression"] },
-    { place: "detail page", tags: ["@regression"] },
+    { place: "cart page", tags: ["@smoke", "@regression"], bugs: [] },
+    { place: "catalog", tags: ["@regression"], bugs: ["BUG-04"] },
+    { place: "detail page", tags: ["@regression"], bugs: ["BUG-06"] },
   ] as const;
 
   for (const user of users) {
-    for (const { place, tags } of removePlaces) {
+    for (const { place, tags, bugs } of removePlaces) {
       test(
         `remove products from the cart [${user}, ${place}]`,
         {
-          tag: [...tags, `@${user}`, ...bugTags(user, "BUG-04", "BUG-06")],
+          tag: [...tags, `@${user}`, ...bugTags(user, ...bugs)],
         },
         async ({
           productPicker,
